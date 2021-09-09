@@ -193,11 +193,12 @@
     document.body.append(memoDiv);
 
     (async () => {
-        let pathname = window.location.pathname;
+        const getPath = () => window.location.toString().replace(/^https:\/\/jp\.mercari\.com/, "");
+        let pathname = getPath();
         let prevPathname = null;
         while (true) {
             // SPAにおいてURLの変更を検知するいい方法が見当たらなかったので、ポーリング…
-            pathname = window.location.pathname;
+            pathname = getPath();
             if (pathname !== prevPathname) {
                 const syorizumiList = JSON.parse(memoDiv.innerText);
                 if (!syorizumiList.includes(pathname)) {

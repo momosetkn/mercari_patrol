@@ -171,7 +171,6 @@
                 const items = Array.from(items_);
                 items.map(l => {
                     const anc = l.href.match(/\/item\/(m\d+)/);
-                    console.log(anc);
                     if (anc) {
                         const id = anc[1];
                         const tuhozumiFlg = isTuhoZumi(id);
@@ -201,7 +200,8 @@
             pathname = getPath();
             if (pathname !== prevPathname) {
                 const syorizumiList = JSON.parse(memoDiv.innerText);
-                if (!syorizumiList.includes(pathname)) {
+                // /searchは毎回DOM生成しているっぽいので、例外
+                if (!syorizumiList.includes(pathname) || pathname.match(/^\/search/)) {
                     await main(pathname);
                     memoDiv.innerText = JSON.stringify([...syorizumiList, pathname]);
                 }

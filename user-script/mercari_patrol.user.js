@@ -12,7 +12,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // Your code here...
@@ -25,56 +25,56 @@
     };
     const zIndexSaikyo = "999999999";
     const createTuhoBtn = () => {
-            const tuhoBtn = document.createElement("button")
-            tuhoBtn.innerHTML = "🚨通報🚨"
-            tuhoBtn.style.color = "red"
-            tuhoBtn.style.fontSize = "32px"
-            tuhoBtn.style.height = "48px"
-            tuhoBtn.addEventListener('click', () => {
-                location.href = "/report" + window.location.pathname;
-            });
+        const tuhoBtn = document.createElement("button")
+        tuhoBtn.innerHTML = "🚨通報🚨"
+        tuhoBtn.style.color = "red"
+        tuhoBtn.style.fontSize = "32px"
+        tuhoBtn.style.height = "48px"
+        tuhoBtn.addEventListener('click', () => {
+            location.href = "/report" + window.location.pathname;
+        });
         return tuhoBtn;
     }
     const createTuhoBtn_behind = (id) => {
-            const tuhoBtn = document.createElement("button")
-            tuhoBtn.innerHTML = "🚨通報🚨";
-            tuhoBtn.style.color = "red";
-            tuhoBtn.style.height = "48px";
-            tuhoBtn.style.marginTop = "-50px";
-            tuhoBtn.style.position = "relative";
-            tuhoBtn.style.zIndex = zIndexSaikyo;
-            tuhoBtn.style.cursor = "pointer";
-            tuhoBtn.title = "別ウィンドウで開きます";
-            tuhoBtn.addEventListener('click', () => {
-                const url = `https://jp.mercari.com/report/item/${id}`;
-                    GM_openInTab(
-                        url, { insert: true }
-                    );
-            });
+        const tuhoBtn = document.createElement("button")
+        tuhoBtn.innerHTML = "🚨通報🚨";
+        tuhoBtn.style.color = "red";
+        tuhoBtn.style.height = "48px";
+        tuhoBtn.style.marginTop = "-50px";
+        tuhoBtn.style.position = "relative";
+        tuhoBtn.style.zIndex = zIndexSaikyo;
+        tuhoBtn.style.cursor = "pointer";
+        tuhoBtn.title = "別ウィンドウで開きます";
+        tuhoBtn.addEventListener('click', () => {
+            const url = `https://jp.mercari.com/report/item/${id}`;
+            GM_openInTab(
+                url, {insert: true}
+            );
+        });
         return tuhoBtn;
     }
     const createTuhoZumiLabel = () => {
-            const elm = document.createElement("span")
-            elm.innerHTML = "【👮通報済👮】"
-            elm.style.color = "red"
+        const elm = document.createElement("span")
+        elm.innerHTML = "【👮通報済👮】"
+        elm.style.color = "red"
         return elm;
     }
     const createTuhoZumiLabel_overlay = () => {
-            const elm = document.createElement("span")
-            elm.innerHTML = "【👮通報済👮】"
-            elm.style.color = "red"
-            elm.style.position = "absolute";
-            elm.style.zIndex = zIndexSaikyo;
+        const elm = document.createElement("span")
+        elm.innerHTML = "【👮通報済👮】"
+        elm.style.color = "red"
+        elm.style.position = "absolute";
+        elm.style.zIndex = zIndexSaikyo;
         return elm;
     }
     const saveTuho = (id) => {
-                        const str = GM_getValue(key, "[]");
+        const str = GM_getValue(key, "[]");
         const obj = JSON.parse(str);
         const newObj = [...obj.filter(x => x !== id), id];//重複排除
-                       GM_setValue(key, JSON.stringify(newObj));
+        GM_setValue(key, JSON.stringify(newObj));
     }
     const isTuhoZumi = (id) => {
-                        const str = GM_getValue(key, "[]");
+        const str = GM_getValue(key, "[]");
         const obj = JSON.parse(str);
         return obj.includes(id);
     }
@@ -82,11 +82,11 @@
     //main
     const main = async (pathname) => {
         // 報告画面
-        if(pathname.match(/^\/report\/item\/m\d+/)){
+        if (pathname.match(/^\/report\/item\/m\d+/)) {
             // モーダルのOKを押す
-            while(true){
+            while (true) {
                 const btn = document.querySelector("body > mer-dialog > div:nth-child(2) > mer-button > button");
-                if(btn) {
+                if (btn) {
                     await sleep(30);//なんか消えなかったのでスリープ
                     btn.click();
                     break;
@@ -106,11 +106,11 @@
             });
         }
         //商品詳細画面
-        if(pathname.match(/^\/item\/m\d+/)){
+        if (pathname.match(/^\/item\/m\d+/)) {
             // 通報ボタン追加
-            while(true){
+            while (true) {
                 const dom = document.querySelector("#item-info > section:nth-child(1) > div.CheckoutButton__Container-sc-u05xmt-0.frFsns");
-                if(dom) {
+                if (dom) {
                     await sleep(50);
                     dom.prepend(createTuhoBtn());
                     break;
@@ -118,13 +118,13 @@
                 await sleep(100);
             }
             // 通報済みチェック
-            while(true){
+            while (true) {
                 const titleElm = document.querySelector("#item-info > section:nth-child(1) > div.mer-spacing-b-12 > mer-heading")?.shadowRoot.querySelector("div > div.label-container > h1");
-                if(titleElm) {
+                if (titleElm) {
                     const id = pathname.match(/.*\/(m\d+)/)[1];
                     const tuhozumiFlg = isTuhoZumi(id);
-                    if(tuhozumiFlg){
-                                            titleElm.prepend(createTuhoZumiLabel());
+                    if (tuhozumiFlg) {
+                        titleElm.prepend(createTuhoZumiLabel());
                     }
                     break;
                 }
@@ -133,18 +133,18 @@
 
         }
         //プロフィール画面
-        if(pathname.match(/^\/user\/profile\/\d+/)){
+        if (pathname.match(/^\/user\/profile\/\d+/)) {
             // 一括通報
-            while(true){
+            while (true) {
                 let lists_ = document.querySelectorAll("#main > div > section.no-border > section > ul > li")
-                if(lists_.length) {
+                if (lists_.length) {
                     await sleep(500);
                     lists_ = document.querySelectorAll("#main > div > section.no-border > section > ul > li")
                     const lists = Array.from(lists_);
                     lists.map(async l => {
-                        while(true){
+                        while (true) {
                             const anc = l.querySelector('a');
-                            if(anc){
+                            if (anc) {
                                 const id = anc.href.match(/.*\/(m\d+)/)[1];
                                 l.append(createTuhoBtn_behind(id));
                                 break;
@@ -158,29 +158,29 @@
             }
         }
         //どの画面に商品へのリンクが出てくるか分からないので…全ページ対象
-        while(true){
+        while (true) {
             let items_ = document.querySelectorAll("a[href^='/item/']");
-                if(items_.length) {
-                    // 読み込まれないことがある？ので、再度読み込み
-                    await sleep(200);
-                     items_ = document.querySelectorAll("a[href^='/item/']");
+            if (items_.length) {
+                // 読み込まれないことがある？ので、再度読み込み
+                await sleep(200);
+                items_ = document.querySelectorAll("a[href^='/item/']");
 
-                    const items = Array.from(items_);
-                    items.map(l => {
-                            const anc = l.href.match(/\/item\/(m\d+)/);
-                                                console.log(anc);
-                            if(anc){
-                                const id = anc[1];
-                                 const tuhozumiFlg = isTuhoZumi(id);
-                                if(tuhozumiFlg){
-                                    l.prepend(createTuhoZumiLabel_overlay());
-                                }
-                            }
-                    });
-                    break;
-                }
-                await sleep(1000);
+                const items = Array.from(items_);
+                items.map(l => {
+                    const anc = l.href.match(/\/item\/(m\d+)/);
+                    console.log(anc);
+                    if (anc) {
+                        const id = anc[1];
+                        const tuhozumiFlg = isTuhoZumi(id);
+                        if (tuhozumiFlg) {
+                            l.prepend(createTuhoZumiLabel_overlay());
+                        }
+                    }
+                });
+                break;
             }
+            await sleep(1000);
+        }
     };
 
     // URLごとに処理済みかチェックするため
@@ -192,12 +192,12 @@
     (async () => {
         let pathname = window.location.pathname;
         let prevPathname = null;
-        while(true){
+        while (true) {
             // SPAにおいてURLの変更を検知するいい方法が見当たらなかったので、ポーリング…
             pathname = window.location.pathname;
-            if(pathname !== prevPathname){
+            if (pathname !== prevPathname) {
                 const syorizumiList = JSON.parse(memoDiv.innerText);
-                if(!syorizumiList.includes(pathname)){
+                if (!syorizumiList.includes(pathname)) {
                     await main(pathname);
                     memoDiv.innerText = JSON.stringify([...syorizumiList, pathname]);
                 }

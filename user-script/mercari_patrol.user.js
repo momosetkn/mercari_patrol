@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         メルカリ通報！
-// @namespace    https://github.com/momosetkn/mercari_patrol
+// @namespace    https://github.com/momosetkn/
 // @version      0.1
 // @description  メルカリ通報支援ツール
 // @author       momosetkn
@@ -10,6 +10,9 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-end
+// @updateURL    https://momosetkn.github.io/mercari_patrol/public/user-script/mercari_patrol.user.js
+// @downloadURL  https://momosetkn.github.io/mercari_patrol/public/user-script/mercari_patrol.user.js
+// @homepage     https://github.com/momosetkn/mercari_patrol
 // ==/UserScript==
 
 (function () {

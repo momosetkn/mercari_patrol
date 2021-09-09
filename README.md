@@ -17,6 +17,6 @@ https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldm
 
 Tampermonkey がインストールされたブラウザで以下のリンクをクリックします。
 
-https://momosetkn.github.io/mercari_patrol/user-script/mercari_patrol.user.js
+https://momosetkn.github.io/mercari_patrol/public/user-script/mercari_patrol.user.js
 
 `インストール`ボタンをクリックしてインストールします。

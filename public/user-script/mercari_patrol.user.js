@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         メルカリ通報！
 // @namespace    https://github.com/momosetkn/
-// @version      0.1
+// @version      202109100945
 // @description  メルカリ通報支援ツール
 // @author       momosetkn
 // @match        https://jp.mercari.com/*
@@ -34,7 +34,7 @@
         tuhoBtn.style.fontSize = "32px"
         tuhoBtn.style.height = "48px"
         tuhoBtn.addEventListener('click', () => {
-            location.href = "/report" + window.location.pathname;
+            document.querySelector("#item-info > section:nth-child(1) > section:nth-child(3) > div > mer-menu > mer-list > mer-action-row").shadowRoot.querySelector("div > button").click();
         });
         return tuhoBtn;
     }

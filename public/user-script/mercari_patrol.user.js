@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         メルカリ通報！
 // @namespace    https://github.com/momosetkn/
-// @version      202109100945
+// @version      202109100950
 // @description  メルカリ通報支援ツール
 // @author       momosetkn
 // @match        https://jp.mercari.com/*
@@ -185,12 +185,6 @@
         }
     };
 
-    // URLごとに処理済みかチェックするため
-    const memoDiv = document.createElement("div");
-    memoDiv.style.display = "none";
-    memoDiv.innerText = "[]";
-    document.body.append(memoDiv);
-
     (async () => {
         const getPath = () => window.location.toString().replace(/^https:\/\/jp\.mercari\.com/, "");
         let pathname = getPath();
@@ -199,12 +193,7 @@
             // SPAにおいてURLの変更を検知するいい方法が見当たらなかったので、ポーリング…
             pathname = getPath();
             if (pathname !== prevPathname) {
-                const syorizumiList = JSON.parse(memoDiv.innerText);
-                // /searchは毎回DOM生成しているっぽいので、例外
-                if (!syorizumiList.includes(pathname) || pathname.match(/^\/search/)) {
-                    await main(pathname);
-                    memoDiv.innerText = JSON.stringify([...syorizumiList, pathname]);
-                }
+                await main(pathname);
             }
 
             prevPathname = pathname;

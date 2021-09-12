@@ -10,8 +10,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-end
-// @updateURL    https://momosetkn.github.io/mercari_patrol/public/user-script/mercari_patrol.user.js
-// @downloadURL  https://momosetkn.github.io/mercari_patrol/public/user-script/mercari_patrol.user.js
+// @updateURL    https://momosetkn.github.io/mercari_patrol/user-script/mercari_patrol.user.js
+// @downloadURL  https://momosetkn.github.io/mercari_patrol/user-script/mercari_patrol.user.js
 // @homepage     https://github.com/momosetkn/mercari_patrol
 // ==/UserScript==
 

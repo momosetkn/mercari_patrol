@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         メルカリ通報！
 // @namespace    https://github.com/momosetkn/
-// @version      202109250048
+// @version      202109250055
 // @description  メルカリ通報支援ツール
 // @author       momosetkn
 // @match        https://jp.mercari.com/*
@@ -28,42 +28,42 @@
         });
     };
     const zIndexSaikyo = "999999999";
-    const createTuhoBtn = () => {
+    const createReportBtn = () => {
         const tuhoBtn = document.createElement("button")
-        tuhoBtn.innerHTML = "🚨通報🚨"
-        tuhoBtn.style.color = "red"
-        tuhoBtn.style.fontSize = "32px"
-        tuhoBtn.style.height = "48px"
-        tuhoBtn.addEventListener('click', () => {
+        reportBtn.innerHTML = "🚨通報🚨"
+        reportBtn.style.color = "red"
+        reportBtn.style.fontSize = "32px"
+        reportBtn.style.height = "48px"
+        reportBtn.addEventListener('click', () => {
             document.querySelector("#item-info > section:nth-child(1) > section:nth-child(3) > div > mer-menu > mer-list > mer-action-row").shadowRoot.querySelector("div > button").click();
         });
-        return tuhoBtn;
+        return reportBtn;
     }
-    const createTuhoBtn_behind = (id) => {
-        const tuhoBtn = document.createElement("button")
-        tuhoBtn.innerHTML = "🚨通報🚨";
-        tuhoBtn.style.color = "red";
-        tuhoBtn.style.height = "48px";
-        tuhoBtn.style.marginTop = "-50px";
-        tuhoBtn.style.position = "relative";
-        tuhoBtn.style.zIndex = zIndexSaikyo;
-        tuhoBtn.style.cursor = "pointer";
-        tuhoBtn.title = "別ウィンドウで開きます";
-        tuhoBtn.addEventListener('click', () => {
+    const createReportBtn_behind = (id) => {
+        const reportBtn = document.createElement("button")
+        reportBtn.innerHTML = "🚨通報🚨";
+        reportBtn.style.color = "red";
+        reportBtn.style.height = "48px";
+        reportBtn.style.marginTop = "-50px";
+        reportBtn.style.position = "relative";
+        reportBtn.style.zIndex = zIndexSaikyo;
+        reportBtn.style.cursor = "pointer";
+        reportBtn.title = "別ウィンドウで開きます";
+        reportBtn.addEventListener('click', () => {
             const url = `https://jp.mercari.com/report/item/${id}`;
             GM_openInTab(
                 url, {insert: true}
             );
         });
-        return tuhoBtn;
+        return reportBtn;
     }
-    const createTuhoZumiLabel = () => {
+    const createReportZumiLabel = () => {
         const elm = document.createElement("span")
         elm.innerHTML = "【👮通報済👮】"
         elm.style.color = "red"
         return elm;
     }
-    const createTuhoZumiLabel_overlay = () => {
+    const createReportZumiLabel_overlay = () => {
         const elm = document.createElement("span")
         elm.innerHTML = "【👮通報済👮】"
         elm.style.color = "red"
@@ -80,13 +80,13 @@
         `;
         return elm;
     }
-    const saveTuho = (id) => {
+    const saveReport = (id) => {
         const str = GM_getValue(key, "[]");
         const obj = JSON.parse(str);
         const newObj = [...obj.filter(x => x !== id), id];//重複排除
         GM_setValue(key, JSON.stringify(newObj));
     }
-    const isTuhoZumi = (id) => {
+    const isReported = (id) => {
         const str = GM_getValue(key, "[]");
         const obj = JSON.parse(str);
         return obj.includes(id);
@@ -128,7 +128,7 @@
             //報告検知
             const submitBtn = document.querySelector("#main > form > mer-button > button");
             submitBtn.addEventListener('click', () => {
-                saveTuho(pathname.match(/\/report\/item\/(m\d+)/)[1]);
+                saveReport(pathname.match(/\/report\/item\/(m\d+)/)[1]);
                 if (document.getElementById(save_report_kind_checkbox_id).checked) {
                     saveReportKind(seleElm.value);
                 }
@@ -141,7 +141,7 @@
                 const dom = document.querySelector("#item-info > section:nth-child(1) > div.CheckoutButton__Container-sc-u05xmt-0.frFsns");
                 if (dom) {
                     await sleep(50);
-                    dom.prepend(createTuhoBtn());
+                    dom.prepend(createReportBtn());
                     break;
                 }
                 await sleep(100);
@@ -151,9 +151,9 @@
                 const titleElm = document.querySelector("#item-info > section:nth-child(1) > div.mer-spacing-b-12 > mer-heading")?.shadowRoot.querySelector("div > div.label-container > h1");
                 if (titleElm) {
                     const id = pathname.match(/.*\/(m\d+)/)[1];
-                    const tuhozumiFlg = isTuhoZumi(id);
-                    if (tuhozumiFlg) {
-                        titleElm.prepend(createTuhoZumiLabel());
+                    const reportedFlg = isReported(id);
+                    if (reportedFlg) {
+                        titleElm.prepend(createReportZumiLabel());
                     }
                     break;
                 }
@@ -175,7 +175,7 @@
                             const anc = l.querySelector('a');
                             if (anc) {
                                 const id = anc.href.match(/.*\/(m\d+)/)[1];
-                                l.append(createTuhoBtn_behind(id));
+                                l.append(createReportBtn_behind(id));
                                 break;
                             }
                             await sleep(100);
@@ -199,9 +199,9 @@
                     const anc = l.href.match(/\/item\/(m\d+)/);
                     if (anc) {
                         const id = anc[1];
-                        const tuhozumiFlg = isTuhoZumi(id);
-                        if (tuhozumiFlg) {
-                            l.prepend(createTuhoZumiLabel_overlay());
+                        const reportedFlg = isReported(id);
+                        if (reportedFlg) {
+                            l.prepend(createReportZumiLabel_overlay());
                         }
                     }
                 });

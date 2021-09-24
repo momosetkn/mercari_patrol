@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         メルカリ通報！
 // @namespace    https://github.com/momosetkn/
-// @version      202109100950
+// @version      202109250048
 // @description  メルカリ通報支援ツール
 // @author       momosetkn
 // @match        https://jp.mercari.com/*
@@ -21,6 +21,7 @@
     // Your code here...
     // util
     const key = "merukari_tuho_tool"
+    const reportKindKey = "merukari_tuho_tool_reportKindKey"
     const sleep = (sec) => {
         return new Promise((resolve, reject) => {
             setTimeout(resolve, sec);
@@ -70,6 +71,15 @@
         elm.style.zIndex = zIndexSaikyo;
         return elm;
     }
+    const save_report_kind_checkbox_id = "save_report_kind";
+    const createReportKindCheckbox = () => {
+        const elm = document.createElement("div")
+        elm.innerHTML = `
+          <input type="checkbox" id="${save_report_kind_checkbox_id}" name="save_report_kind" style="height: auto;">
+          <label for="${save_report_kind_checkbox_id}">選択した報告理由を保存して、デフォルト値に設定する</label>
+        `;
+        return elm;
+    }
     const saveTuho = (id) => {
         const str = GM_getValue(key, "[]");
         const obj = JSON.parse(str);
@@ -80,6 +90,12 @@
         const str = GM_getValue(key, "[]");
         const obj = JSON.parse(str);
         return obj.includes(id);
+    }
+    const saveReportKind = (id) => {
+        GM_setValue(reportKindKey, id);
+    }
+    const getReportKind = () => {
+        return GM_getValue(reportKindKey, "");
     }
 
     //main
@@ -96,8 +112,15 @@
                 }
                 await sleep(100);
             }
+            // 選択した報告理由を保存するチェックボックス仕込み
+            const mainElm = document.querySelector("main");
+            mainElm.append(createReportKindCheckbox());
+
             const seleElm = document.querySelector("#main > form > mer-select > div > label > div.mer-select > select");
-            seleElm.value = "1002";
+            const reportKind = getReportKind();
+            if (reportKind) {
+                seleElm.value = reportKind;
+            }
             seleElm.dispatchEvent(new Event('change'));
             const pseudSeleElm = document.querySelector("#main > form > mer-select")
             pseudSeleElm.dispatchEvent(new Event('change'));
@@ -106,6 +129,9 @@
             const submitBtn = document.querySelector("#main > form > mer-button > button");
             submitBtn.addEventListener('click', () => {
                 saveTuho(pathname.match(/\/report\/item\/(m\d+)/)[1]);
+                if (document.getElementById(save_report_kind_checkbox_id).checked) {
+                    saveReportKind(seleElm.value);
+                }
             });
         }
         //商品詳細画面

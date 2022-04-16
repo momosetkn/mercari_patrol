@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         メルカリ通報！
 // @namespace    https://github.com/momosetkn/
-// @version      202109250055
+// @version      202212161100
 // @description  メルカリ通報支援ツール
 // @author       momosetkn
 // @match        https://jp.mercari.com/*
@@ -29,13 +29,14 @@
     };
     const zIndexSaikyo = "999999999";
     const createReportBtn = () => {
-        const tuhoBtn = document.createElement("button")
+        const reportBtn = document.createElement("button")
         reportBtn.innerHTML = "🚨通報🚨"
         reportBtn.style.color = "red"
         reportBtn.style.fontSize = "32px"
         reportBtn.style.height = "48px"
         reportBtn.addEventListener('click', () => {
-            document.querySelector("#item-info > section:nth-child(1) > section:nth-child(3) > div > mer-menu > mer-list > mer-action-row").shadowRoot.querySelector("div > button").click();
+            //document.querySelector("#item-info > section:nth-child(1) > section:nth-child(3) > div > mer-menu > mer-list > mer-action-row").shadowRoot.querySelector("div > button").click();
+            document.querySelector("mer-menu > mer-list > mer-action-row").shadowRoot.querySelector("div > button").click();
         });
         return reportBtn;
     }
@@ -138,10 +139,11 @@
         if (pathname.match(/^\/item\/m\d+/)) {
             // 通報ボタン追加
             while (true) {
-                const dom = document.querySelector("#item-info > section:nth-child(1) > div.CheckoutButton__Container-sc-u05xmt-0.frFsns");
+                const dom = document.querySelector("div.mer-spacing-b-12");
+                console.log(dom);
                 if (dom) {
                     await sleep(50);
-                    dom.prepend(createReportBtn());
+                    dom.append(createReportBtn());
                     break;
                 }
                 await sleep(100);

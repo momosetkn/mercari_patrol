@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         メルカリ通報！
 // @namespace    https://github.com/momosetkn/
-// @version      202212161100
+// @version      202212161105
 // @description  メルカリ通報支援ツール
 // @author       momosetkn
 // @match        https://jp.mercari.com/*
@@ -76,7 +76,7 @@
     const createReportKindCheckbox = () => {
         const elm = document.createElement("div")
         elm.innerHTML = `
-          <input type="checkbox" id="${save_report_kind_checkbox_id}" name="save_report_kind" style="height: auto;">
+          <input type="checkbox" checked id="${save_report_kind_checkbox_id}" name="save_report_kind" style="height: auto;">
           <label for="${save_report_kind_checkbox_id}">選択した報告理由を保存して、デフォルト値に設定する</label>
         `;
         return elm;
@@ -167,10 +167,11 @@
         if (pathname.match(/^\/user\/profile\/\d+/)) {
             // 一括通報
             while (true) {
-                let lists_ = document.querySelectorAll("#main > div > section.no-border > section > ul > li")
+                const getLists_ = () => document.querySelectorAll("#item-grid > ul > li");
+                let lists_ = getLists_();
                 if (lists_.length) {
                     await sleep(500);
-                    lists_ = document.querySelectorAll("#main > div > section.no-border > section > ul > li")
+                    lists_ = getLists_();
                     const lists = Array.from(lists_);
                     lists.map(async l => {
                         while (true) {
